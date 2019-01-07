@@ -29,10 +29,10 @@ class _Const(object):
         return "black"
     @constant
     def EMAIL_ADDRESS_TO_SEND_TO():
-        return "markdh102@hotmail.co.uk"
+        return "youremail"
     @constant
     def EMAIL_ADDRESS_TO_SEND_FROM():
-        return "alangunall@outlook.com"
+        return "youremail"
     @constant
     def FIRST_LEVEL_SHED_ALARM_VAL():
         return 25
