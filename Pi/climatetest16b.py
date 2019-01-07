@@ -201,7 +201,7 @@ def tryToSendEmail():
             server.ehlo()
             server.starttls()
             server.ehlo()
-            server.login(CONST.EMAIL_ADDRESS_TO_SEND_FROM, "Rabbit69")
+            server.login(CONST.EMAIL_ADDRESS_TO_SEND_FROM, "PWD")
             msg = MIMEMultipart()
             msg['Subject'] = "Data from Pi (RETRY)"
             msg['From'] = CONST.EMAIL_ADDRESS_TO_SEND_FROM
@@ -281,7 +281,7 @@ def sendEmail():
         server.ehlo()
         server.starttls()
         server.ehlo()
-        server.login(CONST.EMAIL_ADDRESS_TO_SEND_FROM, "Rabbit69")
+        server.login(CONST.EMAIL_ADDRESS_TO_SEND_FROM, "PWD")
         msg = MIMEMultipart()
         msg['Subject'] = "Data from Pi"
         msg['From'] = CONST.EMAIL_ADDRESS_TO_SEND_FROM
@@ -360,7 +360,7 @@ def sendAlarmEmail(alarmtype):
         server.ehlo()
         server.starttls()
         server.ehlo()
-        server.login(CONST.EMAIL_ADDRESS_TO_SEND_FROM, "Rabbit69")
+        server.login(CONST.EMAIL_ADDRESS_TO_SEND_FROM, "PWD")
         msg = MIMEMultipart()
 
         v = "unknown"
