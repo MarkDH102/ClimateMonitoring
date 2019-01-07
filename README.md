@@ -25,4 +25,4 @@ The internal Pi serial port is connected to a touch screen LCD (320 * 240).
 * Touch the screen in the lower half to show min/max/badCRC and time since last message. While in this screen, touching the display again resets all of the above values and changes back to displaying the temperatures.
 * If no touch is detected on the screen for 60s then its backlight is turned off to conserve power. Touch it to get display on again.
 
-![NewScreen](https://raw.githubusercontent.com/MarkDH102/ClimateMonitoring/Master/Resources/NewScreen.png)
+![NewScreen](https://raw.githubusercontent.com/MarkDH102/ClimateMonitoring/master/resources/NewScreen.png)
