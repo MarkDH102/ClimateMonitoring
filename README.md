@@ -4,6 +4,12 @@ Household climate monitoring with a Pi ZeroW and some homebrew Arduinos using 43
 
 RUN WITH PYTHON3.
 
+Currently working on Stretch OS.
+
+Only pre-requisite is gnuplot. Install using sudo apt-get install gnuplot-x11.
+
+Touchscreen display is uLCD-32WPTU from 4D systems.
+
 MASTER Arduino unit is connected to Pi over a proprietary 3 wire interface (CLK, DATA, RST).
 
 This gathers all the RF data from the 4 SLAVE Arduinos and presents a single message to the Pi. 
