@@ -91,8 +91,8 @@ int            mintAtticMessageCount;
 int            mintBedroomMessageCount;
 int            mintGardenroomMessageCount;
 float          mfltShedVoltage;
-float		   mfltBedroomVoltage;
-float		   mfltGardenroomVoltage;
+float		       mfltBedroomVoltage;
+float		       mfltGardenroomVoltage;
 float          mfltAtticVoltage;
 float          mfltHouseTemp;
 float          mfltHouseHumidity;
@@ -548,7 +548,7 @@ void sendData(void)
 }
 
 
-void handleShedAndAttic(byte bytShedOrAttic)
+/*void handleShedAndAttic(byte bytShedOrAttic)
 {
   byte bytVarCount;
   byte bytRealCRC;
@@ -629,7 +629,7 @@ void handleShedAndAttic(byte bytShedOrAttic)
       }
     }
   }
-}
+}*/
 
 
 void handleBedAndGarden(byte bytType)
@@ -663,6 +663,11 @@ void handleBedAndGarden(byte bytType)
               mfltAtticHumidity = atof(&mbytValues[2][0]);
               mfltAtticVoltage = atof(&mbytValues[3][0]) / 10000.0f;
             break;
+            case SHED:
+              mfltShedTemp = atof(&mbytValues[1][0]);
+              mfltShedHumidity = atof(&mbytValues[2][0]);
+              mfltShedVoltage = atof(&mbytValues[3][0]) / 10000.0f;
+            break;
         }
       }
     }
@@ -694,6 +699,11 @@ void handleBedAndGarden(byte bytType)
                 mfltAtticHumidity = atof(&mbytValues[5][0]);
                 mfltAtticVoltage = atof(&mbytValues[6][0]) / 10000.0f;
               break;
+              case SHED:
+                mfltShedTemp = atof(&mbytValues[4][0]);
+                mfltShedHumidity = atof(&mbytValues[5][0]);
+                mfltShedVoltage = atof(&mbytValues[6][0]) / 10000.0f;
+              break;
             }
             mintCorrectedCount++;
           }
@@ -707,6 +717,8 @@ void handleBedAndGarden(byte bytType)
           mwrdBadCountGardenroom++;
         else if (bytType == ATTIC)
           mwrdBadCountAttic++;
+        else if (bytType == SHED)
+          mwrdBadCountShed++;
       }
     }
     else
@@ -731,6 +743,11 @@ void handleBedAndGarden(byte bytType)
               mfltAtticTemp = atof(&mbytValues[4][0]);
               mfltAtticHumidity = atof(&mbytValues[5][0]);
               mfltAtticVoltage = atof(&mbytValues[6][0]) / 10000.0f;
+            break;
+            case SHED:
+              mfltShedTemp = atof(&mbytValues[4][0]);
+              mfltShedHumidity = atof(&mbytValues[5][0]);
+              mfltShedVoltage = atof(&mbytValues[6][0]) / 10000.0f;
             break;
           }
           mintCorrectedCount++;
@@ -829,7 +846,7 @@ void loop()
       {
         case SHED:
           mintShedMessageCount++;
-          handleShedAndAttic(SHED);
+          handleBedAndGarden(SHED);
         break;
 
         case BEDROOM:
@@ -998,4 +1015,3 @@ static bool chkValues(byte i, bool chkHumidity)
   }
   return true;
 }
-
