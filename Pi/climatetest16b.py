@@ -711,13 +711,13 @@ def updateRadioUnits():
             _currentLightLevel = getNum(p1[26]) / 10.0
             labelLightLevel.configure(text="Light Level = " + str(_currentLightLevel))
 
-            t = getNum(p1[1])
-            _currentSummerhouseTemperature = t
-            if t > _maxTemperatureSummerhouse :
-                _maxTemperatureSummerhouse = t
-            if t < _minTemperatureSummerhouse :
-                _minTemperatureSummerhouse = t
-            summerhouseTempMeter.set(t)
+            tt = getNum(p1[1])
+            _currentSummerhouseTemperature = tt
+            if tt > _maxTemperatureSummerhouse :
+                _maxTemperatureSummerhouse = tt
+            if tt < _minTemperatureSummerhouse :
+                _minTemperatureSummerhouse = tt
+            summerhouseTempMeter.set(tt)
             summerhouseTempMeter.setminval(_minTemperatureSummerhouse)
             summerhouseTempMeter.setmaxval(_maxTemperatureSummerhouse)
 			
@@ -731,11 +731,11 @@ def updateRadioUnits():
             summerhouseHumMeter.setminval(_minHumiditySummerhouse)
             summerhouseHumMeter.setmaxval(_maxHumiditySummerhouse)
 
-            if t >= CONST.FIRST_LEVEL_SHED_ALARM_VAL :
+            if tt >= CONST.FIRST_LEVEL_SHED_ALARM_VAL :
                 if _shedAtLevel1messageSent == False :
                     _shedAtLevel1messageSent = True
                     sendAlarmEmail(CONST.FIRST_LEVEL_SHED_ALARM_VAL)
-            if t >= CONST.SECOND_LEVEL_SHED_ALARM_VAL :
+            if tt >= CONST.SECOND_LEVEL_SHED_ALARM_VAL :
                 if _shedAtLevel2messageSent == False :
                     _shedAtLevel2messageSent = True
                     sendAlarmEmail(CONST.SECOND_LEVEL_SHED_ALARM_VAL)
