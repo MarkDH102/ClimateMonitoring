@@ -632,19 +632,24 @@ void sendData(void)
 }*/
 
 
+// The data comes in 2 copies of the same set of data Temp,Humidity,Volts,Temp,Humidity,Volts,CRC
+// The CRC is for the 3 items of data
 void handleBedAndGarden(byte bytType)
 {
   byte bytVarCount;
   byte bytRealCRC;
 
+  // splitValues also calculates the CRC value that I generate within the message
   bytVarCount = splitValues(mbytData);              
   bytRealCRC = mbytData[*radio.DataLen - 1];
 
   if (radio.CRCPass())
   {
+    // Ok, the RF chip has said that it's CRC is good so the data must be good
     if (bytVarCount >= 4)
     {
-      if (chkValues(1, true) ==  true)
+      // Check the first of the 2 sets of values
+      if (chkValues(1) ==  true)
       {
         switch (bytType)
         {
@@ -674,13 +679,16 @@ void handleBedAndGarden(byte bytType)
   }
   else
   {
+    // Handle the case where the CRC from the RF device failed and check our own internally calculated CRC
+    // If the CRC on the first set of data is wrong, check the 2nd set
     if (mbytCRC1 != bytRealCRC)
     {
       if (mbytCRC2 == bytRealCRC)
       {
+        // 2nd set of data has a correct CRC so use that
         if (bytVarCount >= 7)
         {
-          if (chkValues(4, true) ==  true)
+          if (chkValues(4) ==  true)
           {
             switch (bytType)
             {
@@ -711,6 +719,7 @@ void handleBedAndGarden(byte bytType)
       }
       else
       {
+        // All of the RF chip CRC and the calculated CRC's are wrong so data is no good
         if (bytType == BEDROOM)        
           mwrdBadCountBedroom++;
         else if (bytType == GARDEN)
@@ -723,31 +732,32 @@ void handleBedAndGarden(byte bytType)
     }
     else
     {
+      // My calculated CRC on the first set of data is good, even though the chip CRC is bad
       if (bytVarCount >= 4)
       {
-        if (chkValues(1, true) ==  true)
+        if (chkValues(1) ==  true)
         {
           switch (bytType)
           {
             case BEDROOM:
-              mfltBedroomTemp = atof(&mbytValues[4][0]);
-              mfltBedroomHumidity = atof(&mbytValues[5][0]);
-              mfltBedroomVoltage = atof(&mbytValues[6][0]) / 10000.0f;            
+              mfltBedroomTemp = atof(&mbytValues[1][0]);
+              mfltBedroomHumidity = atof(&mbytValues[2][0]);
+              mfltBedroomVoltage = atof(&mbytValues[3][0]) / 10000.0f;            
             break;
             case GARDEN:
-              mfltGardenroomTemp = atof(&mbytValues[4][0]);
-              mfltGardenroomHumidity = atof(&mbytValues[5][0]);
-              mfltGardenroomVoltage = atof(&mbytValues[6][0]) / 10000.0f;
+              mfltGardenroomTemp = atof(&mbytValues[1][0]);
+              mfltGardenroomHumidity = atof(&mbytValues[2][0]);
+              mfltGardenroomVoltage = atof(&mbytValues[3][0]) / 10000.0f;
             break;
             case ATTIC:
-              mfltAtticTemp = atof(&mbytValues[4][0]);
-              mfltAtticHumidity = atof(&mbytValues[5][0]);
-              mfltAtticVoltage = atof(&mbytValues[6][0]) / 10000.0f;
+              mfltAtticTemp = atof(&mbytValues[1][0]);
+              mfltAtticHumidity = atof(&mbytValues[2][0]);
+              mfltAtticVoltage = atof(&mbytValues[3][0]) / 10000.0f;
             break;
             case SHED:
-              mfltShedTemp = atof(&mbytValues[4][0]);
-              mfltShedHumidity = atof(&mbytValues[5][0]);
-              mfltShedVoltage = atof(&mbytValues[6][0]) / 10000.0f;
+              mfltShedTemp = atof(&mbytValues[1][0]);
+              mfltShedHumidity = atof(&mbytValues[2][0]);
+              mfltShedVoltage = atof(&mbytValues[3][0]) / 10000.0f;
             break;
           }
           mintCorrectedCount++;
@@ -993,25 +1003,17 @@ static byte splitValues(char *pData)
   return varCount;
 }
 
-static bool chkValues(byte i, bool chkHumidity)
+static bool chkValues(byte i)
 {
   // Check temperature
   if (atof(&mbytValues[i][0]) > 50.0)
     return false;
-  if (chkHumidity == true)
-  {
-    // Check humidity
-    if (atof(&mbytValues[i + 1][0]) > 100.0)
-      return false;
-    // Check voltage (in position 2)
-    if (atof(&mbytValues[i + 2][0]) < 0.1)
-      return false;
-  }
-  else
-  {
-    // Check voltage (in position 1, no humidity from shed))
-    if (atof(&mbytValues[i + 1][0]) < 0.1)
-      return false;
-  }
+  // Check humidity
+  if (atof(&mbytValues[i + 1][0]) > 100.0)
+    return false;
+  // Check voltage (in position 2)
+  if (atof(&mbytValues[i + 2][0]) < 0.1)
+    return false;
+
   return true;
 }
