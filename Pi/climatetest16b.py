@@ -38,6 +38,7 @@ import time
 from time import strftime, localtime
 from datetime import date
 import smtplib
+from socket import gaierror
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
@@ -201,7 +202,7 @@ def tryToSendEmail():
             server.ehlo()
             server.starttls()
             server.ehlo()
-            server.login(CONST.EMAIL_ADDRESS_TO_SEND_FROM, "PWD")
+            server.login(CONST.EMAIL_ADDRESS_TO_SEND_FROM, "GiraffeLamb69$")
             msg = MIMEMultipart()
             msg['Subject'] = "Data from Pi (RETRY)"
             msg['From'] = CONST.EMAIL_ADDRESS_TO_SEND_FROM
@@ -247,6 +248,9 @@ def tryToSendEmail():
         except (TimeoutException) :
             addLogMessage("Retry data timeout")            
 
+        except (gaierror):
+            addLogMessage("GAI error")
+
         except :
             addLogMessage("Retry data FAIL")            
 
@@ -281,7 +285,7 @@ def sendEmail():
         server.ehlo()
         server.starttls()
         server.ehlo()
-        server.login(CONST.EMAIL_ADDRESS_TO_SEND_FROM, "PWD")
+        server.login(CONST.EMAIL_ADDRESS_TO_SEND_FROM, "GiraffeLamb69$")
         msg = MIMEMultipart()
         msg['Subject'] = "Data from Pi"
         msg['From'] = CONST.EMAIL_ADDRESS_TO_SEND_FROM
@@ -333,6 +337,15 @@ def sendEmail():
         _firstEmailRetry = 1
         tryToSendEmail()
 
+    except (gaierror):
+        addLogMessage("GAI error")
+
+        _fileNamesToEmail.append(_houseFile)
+
+        # And start a timed event running to retry email again every half hour
+        _firstEmailRetry = 1
+        tryToSendEmail()
+
     except :
 
         addLogMessage("Data fail")
@@ -360,7 +373,7 @@ def sendAlarmEmail(alarmtype):
         server.ehlo()
         server.starttls()
         server.ehlo()
-        server.login(CONST.EMAIL_ADDRESS_TO_SEND_FROM, "PWD")
+        server.login(CONST.EMAIL_ADDRESS_TO_SEND_FROM, "GiraffeLamb69$")
         msg = MIMEMultipart()
 
         v = "unknown"
@@ -381,6 +394,9 @@ def sendAlarmEmail(alarmtype):
 		
     except (TimeoutException) :
         addLogMessage("Alarm timeout")
+
+    except (gaierror):
+        addLogMessage("GAI error")
 
     except :
 
@@ -700,6 +716,9 @@ def updateRadioUnits():
     strX = readArduino3wire()
 
     if len(strX) :
+
+        #print(strX)
+
         try :
             p1 = strX.split(",")
         except :
